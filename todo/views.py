@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from .models import Todo
 from .forms import TodoForm
 
@@ -35,3 +35,13 @@ def todo_edit(request,pk):
     else :
         form = TodoForm(instance=todo)
     return render(request,todo/todo_post.html,{'form':form})
+
+def done_list(request):
+    dones = Todo.objects.filter(compile=True)
+    return render(request,'todo/done_list.html',{'dones':dones})
+
+def todo_done(request,pk):
+    todo = Todo.objects.get(id=pk)
+    todo.complete = True
+    todo.save()
+    return redirect('todo_list')
